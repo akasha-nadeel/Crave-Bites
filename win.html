@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Spin & Win! | Exclusive Rewards | CraveBites</title>
+    <meta name="description"
+        content="Try your luck with the CraveBites Fortune Wheel! Win free meals, special discounts, and CravePoints every single day.">
+    <meta name="keywords" content="win rewards, fast food prizes, spin to win, free meals, CraveBites rewards">
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="site.webmanifest">
+    <link href="style.css" rel="stylesheet" />
+    <link href="new_offers.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Specific Styles for Win Page */
+        .win-page-container {
+            padding: 40px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 85px;
+            text-align: center;
+            background: radial-gradient(circle at top right, #fff5eb, #ffffff),
+                radial-gradient(circle at bottom left, #fff0e0, #ffffff);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .win-layout-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 80px;
+            max-width: 1200px;
+            width: 95%;
+            z-index: 10;
+            padding: 0 40px 40px;
+        }
+
+        .win-page-container::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-color);
+            filter: blur(150px);
+            opacity: 0.1;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .win-right-content {
+            text-align: left;
+            max-width: 500px;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        .win-description {
+            font-size: 1.25rem;
+            color: #57606f;
+            line-height: 1.7;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .win-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #2c3e50;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            line-height: 1.1;
+        }
+
+        .win-title span {
+            background: linear-gradient(to bottom, var(--primary-color), #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 0;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+        }
+
+        .wheel-section {
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 50px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: scaleUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 1100px) {
+
+            html,
+            body {
+                overflow: auto;
+                /* Allow scrolling on mobile if needed */
+                height: auto;
+                min-height: 100%;
+            }
+
+            .win-page-container {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 80px;
+                padding-bottom: 40px;
+            }
+
+            .win-layout-wrapper {
+                flex-direction: column;
+                gap: 40px;
+                padding: 20px;
+            }
+
+            .win-right-content {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .win-title {
+                font-size: 3rem;
+                text-align: center;
+            }
+
+            .win-description {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+            }
+
+            .wheel-text {
+                font-size: 0.7rem;
+                width: 80px;
+                margin-left: -40px;
+            }
+
+            .wheel-outer-ring {
+                transform: scale(0.8);
+            }
+
+            .wheel-pointer {
+                top: -5px;
+            }
+
+            .win-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 0 auto 40px;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+        }
+
+        .wheel-outer-ring {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 15px solid #2c3e50;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .wheel-outer-ring::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        /* Decorative dots on ring */
+        .ring-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            z-index: 3;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background: #e74c3c;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 20;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+            border-bottom: 4px solid #c0392b;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            background: conic-gradient(#FFD700 0deg 60deg,
+                    #FF6B6B 60deg 120deg,
+                    #4ECDC4 120deg 180deg,
+                    #9B59B6 180deg 240deg,
+                    #FF9F43 240deg 300deg,
+                    #2ECC71 300deg 360deg);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .wheel-center-cap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 15;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), inset 0 -4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-size: 1.5rem;
+            border: 4px solid #2c3e50;
+        }
+
+        .wheel-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 140px;
+            height: 40px;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-align: right;
+            line-height: 40px;
+            margin-top: -20px;
+            margin-left: -70px;
+            transform-origin: center center;
+            padding-right: 25px;
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 5px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .wheel-text i {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .spin-btn-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, var(--primary-color), #f39c12);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 15px 30px rgba(255, 159, 28, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 159, 28, 0.5);
+        }
+
+        .spin-btn:active:not(:disabled) {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .spin-btn:disabled {
+            background: #bdc3c7;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Win Modal Adjustments */
+        .win-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .win-modal-content {
+            background: #ffffff;
+            padding: 60px 40px;
+            border-radius: 60px;
+            text-align: center;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: bounceIn 0.8s cubic-bezier(0.17, 0.67, 0.43, 1.4);
+        }
+
+        .trophy-animation {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .win-modal-content h2 {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .win-modal-content p {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .win-modal-btn {
+            background: #f39c12;
+            color: #000;
+            border: 2px solid #000;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .win-modal-btn:hover {
+            transform: scale(1.05);
+            background: #e67e22;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2001;
+        }
+
+        /* Navbar Points Display Style */
+        .points-badge {
+            margin-right: 15px;
+            cursor: default;
+            background: linear-gradient(90deg, #FFD700, #FF8C00);
+            padding: 6px 18px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .points-badge i {
+            color: white;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar (Simplified) -->
+    <nav class="navbar" style="background-color: rgba(0, 0, 0, 0.9);">
+        <div class="container nav-container">
+            <a class="logo" href="index.html">Crave<span>Bites</span>.</a>
+            <div class="nav-right">
+                <!-- Points Display -->
+                <div class="nav-item points-badge" id="navPointsDisplay">
+                    <i class="fa-solid fa-crown"></i>
+                    <span id="userPoints">0 Pts</span>
+                </div>
+
+                <a class="nav-item" href="index.html">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Win Section -->
+    <!-- Win Section -->
+    <div class="win-page-container">
+        <div class="win-layout-wrapper">
+            <!-- Left Side: Wheel -->
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel-outer-ring">
+                        <!-- Decorative dots for the ring -->
+                        <div class="ring-dot" style="transform: translate(-50%, -50%) rotate(0deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(45deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(90deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(135deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(180deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(225deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(270deg) translateY(-170px);">
+                        </div>
+                        <div class="ring-dot"
+                            style="transform: translate(-50%, -50%) rotate(315deg) translateY(-170px);">
+                        </div>
+                    </div>
+                    <!-- ID needed for script logic -->
+                    <div class="wheel" id="theWheel">
+                        <!-- Segments -->
+                        <div class="wheel-text" style="transform: rotate(30deg) translateY(-120px);"><i
+                                class="fa-solid fa-cloud"></i> TRY AGAIN</div>
+                        <div class="wheel-text" style="transform: rotate(90deg) translateY(-120px);"><i
+                                class="fa-solid fa-wine-glass"></i> FREE DRINK</div>
+                        <div class="wheel-text" style="transform: rotate(150deg) translateY(-120px);"><i
+                                class="fa-solid fa-star"></i> 50 PTS</div>
+                        <div class="wheel-text" style="transform: rotate(210deg) translateY(-120px);"><i
+                                class="fa-solid fa-rotate-left"></i> TRY AGAIN</div>
+                        <div class="wheel-text" style="transform: rotate(270deg) translateY(-120px);"><i
+                                class="fa-solid fa-burger"></i> FREE MELT</div>
+                        <div class="wheel-text" style="transform: rotate(330deg) translateY(-120px);"><i
+                                class="fa-solid fa-coins"></i> 20 PTS</div>
+                    </div>
+
+                    <div class="wheel-center-cap">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                </div>
+
+                <div class="spin-btn-container">
+                    <button class="spin-btn" id="spinActionBtn">Spin Now!</button>
+                </div>
+            </div>
+
+            <!-- Right Side: Title and Description -->
+            <div class="win-right-content">
+                <h1 class="win-title">SPIN & <span>WIN!</span></h1>
+                <p class="win-description">
+                    Ready to test your luck? Spin the wheel of fortune and win amazing rewards!
+                    From exclusive **CravePoints** to **FREE Melts and Drinks**, every spin is a win-win.
+                    <br><br>
+                    You have **1 free spin daily**! Your prizes are automatically linked to your account.
+                    Let's see what the chef has picked for you today!
+                </p>
+                <div class="wheel-stats" style="margin-top: 30px; display: flex; gap: 20px;">
+                    <div class="stat-item" style="text-align: left;">
+                        <span class="stat-label"
+                            style="display: block; font-size: 0.9rem; color: #7f8c8d; text-transform: uppercase;">Daily
+                            Spins</span>
+                        <span id="spinsRemaining" class="stat-value"
+                            style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color);">1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win Modal -->
+    <div class="win-modal-overlay" id="winModal">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="win-modal-content">
+            <div class="trophy-animation">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 id="modalTitle">Congratulations!</h2>
+            <p id="modalMessage">You won something awesome!</p>
+            <div id="modalActions">
+                <button class="win-modal-btn" onclick="closeWinModal()">Awesome!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shared Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Local Toast Function for Win Page
+        function showToast(message, type = 'success') {
+            let container = document.querySelector('.toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'error') toast.style.borderLeft = '4px solid #ff4d4d';
+            if (type === 'info') toast.style.borderLeft = '4px solid #3498db';
+
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-check"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                setTimeout(() => toast.classList.add('show'), 10);
+            });
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const spinActionBtn = document.getElementById('spinActionBtn');
+            const wheel = document.getElementById('theWheel');
+
+
+            function updatePointsDisplay() {
+                const display = document.getElementById('userPoints');
+                if (display) {
+                    const pts = localStorage.getItem('craveBitesPoints') || '0';
+                    display.innerText = `${pts} Pts`;
+                }
+            }
+
+            if (spinActionBtn && wheel) {
+                // Initial Points Load
+                updatePointsDisplay();
+
+                // 1. Check Daily Limit on Load
+                const spinData = JSON.parse(localStorage.getItem('craveBitesSpinData') || '{}');
+                const today = new Date().toDateString();
+
+                if (spinData.date === today && spinData.count >= 1) {
+                    disableSpinButton('Spin Again Tomorrow!');
+                }
+
+                // 2. Click Handler
+                spinActionBtn.addEventListener('click', () => {
+                    // Re-check Auth just in case
+                    const user = localStorage.getItem('craveBitesUser');
+                    if (!user) {
+                        showToast('Please Login first!', 'error');
+                        setTimeout(() => window.location.href = 'index.html', 1500);
+                        return;
+                    }
+
+                    // Re-check Limit
+                    const currentSpinData = JSON.parse(localStorage.getItem('craveBitesSpinData') || '{}');
+                    if (currentSpinData.date === new Date().toDateString() && currentSpinData.count >= 1) {
+                        showToast('You have used your daily spin!', 'info');
+                        disableSpinButton('Spin Again Tomorrow!');
+                        return;
+                    }
+
+                    // Start Spin
+                    spinActionBtn.disabled = true;
+                    spinActionBtn.innerText = 'Spinning...';
+
+                    // Random Degree: 5 spins (1800) + random
+                    const randomDegree = Math.floor(Math.random() * 360) + 1800;
+
+                    // Apply CSS Transition
+                    wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+                    wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+                    // Wait for end
+                    setTimeout(() => {
+                        const actualRotation = randomDegree % 360;
+                        const pointerAngle = (360 - actualRotation) % 360;
+
+                        // Segments Logic
+                        // 0-60: 10% OFF
+                        // 60-120: FREE DRINK
+                        // 120-180: 50 PTS
+                        // 180-240: TRY AGAIN
+                        // 240-300: FREE MELT
+                        // 300-360: 20 PTS
+
+                        let message = '';
+                        let type = 'success';
+                        let points = 0;
+
+                        if (pointerAngle >= 0 && pointerAngle < 60) {
+                            message = 'Try Again Tomorrow!';
+                            type = 'info';
+                        } else if (pointerAngle >= 60 && pointerAngle < 120) {
+                            message = '🥤 FREE DRINK! (Select Prize)';
+                        } else if (pointerAngle >= 120 && pointerAngle < 180) {
+                            message = '🌟 You won 50 CravePoints!';
+                            points = 50;
+                        } else if (pointerAngle >= 180 && pointerAngle < 240) {
+                            message = 'Try Again Tomorrow!';
+                            type = 'info';
+                        } else if (pointerAngle >= 240 && pointerAngle < 300) {
+                            message = '🌯 FREE MELT! (Select Prize)';
+                        } else if (pointerAngle >= 300 && pointerAngle < 360) {
+                            message = '🌟 You won 20 CravePoints!';
+                            points = 20;
+                        }
+
+                        // Process Rewards
+                        if (points > 0) {
+                            let currentPoints = parseInt(localStorage.getItem('craveBitesPoints') || '0');
+                            localStorage.setItem('craveBitesPoints', (currentPoints + points).toString());
+                            updatePointsDisplay();
+                        }
+
+                        // Determine if it was a win or try again for Modal vs Toast
+                        if (message.includes('Try Again')) {
+                            showToast(message, type);
+                        } else {
+                            // Show Modal for Wins
+                            showWinModal(message);
+                        }
+
+                        // Save State
+                        const newSpinData = JSON.parse(localStorage.getItem('craveBitesSpinData') || '{}');
+                        if (newSpinData.date !== new Date().toDateString()) {
+                            // New day or first spin ever
+                            newSpinData.date = new Date().toDateString();
+                            newSpinData.count = 1;
+                        } else {
+                            // Same day, increment
+                            newSpinData.count = (newSpinData.count || 0) + 1;
+                        }
+                        localStorage.setItem('craveBitesSpinData', JSON.stringify(newSpinData));
+
+                        // Manage Button State
+                        if (newSpinData.count >= 1) {
+                            disableSpinButton('Spin Again Tomorrow!');
+                            document.getElementById('spinsRemaining').innerText = '0';
+                        } else {
+                            spinActionBtn.disabled = false;
+                            spinActionBtn.innerText = `Spin Now!`;
+                        }
+
+
+                    }, 4000);
+                });
+            }
+
+            function disableSpinButton(text) {
+                spinActionBtn.disabled = true;
+                spinActionBtn.innerText = text;
+                spinActionBtn.style.opacity = '0.6';
+                spinActionBtn.style.cursor = 'not-allowed';
+                spinActionBtn.style.background = '#95a5a6';
+                spinActionBtn.style.boxShadow = 'none';
+                spinActionBtn.style.transform = 'none';
+            }
+        });
+
+        // Modal Functions
+        function showWinModal(message) {
+            const modal = document.getElementById('winModal');
+            const msgEl = document.getElementById('modalMessage');
+            const actionsEl = document.getElementById('modalActions');
+
+            if (modal && msgEl && actionsEl) {
+                msgEl.innerText = message;
+                modal.style.display = 'flex';
+
+                // Logic for Buttons based on Prize
+                if (message.includes('FREE MELT') || message.includes('FREE DRINK')) {
+                    const type = message.includes('MELT') ? 'melt' : 'drink';
+                    actionsEl.innerHTML = `
+                        <button class="win-modal-btn" onclick="claimPrize('${type}')">
+                            <i class="fa-solid fa-utensils"></i> Select ${type === 'melt' ? 'Melt' : 'Drink'} from Menu
+                        </button>
+                    `;
+                } else {
+                    actionsEl.innerHTML = `<button class="win-modal-btn" onclick="closeWinModal()">Awesome!</button>`;
+                }
+
+                fireConfetti();
+            }
+        }
+
+        function claimPrize(type) {
+            localStorage.setItem('craveBitesWinMode', type);
+            // Use assign for clearer intent, and ./ for explicitly local path
+            window.location.assign('./index.html');
+        }
+
+        function closeWinModal() {
+            const modal = document.getElementById('winModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function fireConfetti() {
+            var myCanvas = document.getElementById('confetti-canvas');
+            if (!myCanvas) return;
+
+            // Resize canvas to window
+            myCanvas.width = window.innerWidth;
+            myCanvas.height = window.innerHeight;
+
+            var myConfetti = confetti.create(myCanvas, {
+                resize: true,
+                useWorker: true
+            });
+
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                myConfetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                myConfetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+
+</html>

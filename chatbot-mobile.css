@@ -1,0 +1,13 @@
+/* Chat Window Mobile Adjustments */
+@media (max-width: 480px) {
+    .chat-window-custom {
+        width: 280px !important;
+        /* Smaller width for mobile */
+        height: 350px !important;
+        /* Smaller height for mobile */
+        bottom: 75px !important;
+        /* Slightly lower position */
+        left: 0 !important;
+        /* Adjust horizontal position if needed */
+    }
+}

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order | CraveBites</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f9fafb;
+            padding-top: 80px;
+        }
+
+        .tracking-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .tracking-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tracking-header h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .track-input-group {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .track-input-group input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .track-input-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Order Status Card */
+        .order-status-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            margin-bottom: 40px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .order-status-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .order-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-id h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .order-id p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .estimated-time {
+            text-align: right;
+        }
+
+        .estimated-time span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .estimated-time strong {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding: 0 20px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 4px;
+            background-color: #eee;
+            z-index: 1;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 1s ease;
+            width: 0%;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step {
+            text-align: center;
+            width: 80px;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            color: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-icon {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 159, 28, 0.2);
+        }
+
+        .step.completed .step-icon {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .step.active p {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Recent Orders */
+        .recent-orders {
+            margin-top: 50px;
+        }
+
+        .recent-orders h3 {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .order-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .order-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-summary-mini h4 {
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .order-summary-mini p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-preparing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-delivery {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        @media (max-width: 600px) {
+            .steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .progress-bar {
+                width: 4px;
+                height: 100%;
+                left: 20px;
+                /* Adjust based on icon centering */
+                top: 0;
+                transform: none;
+            }
+
+            .progress-fill {
+                width: 100%;
+                height: 0%;
+            }
+
+            .step {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                width: 100%;
+                text-align: left;
+            }
+
+            .step-icon {
+                margin: 0;
+            }
+
+            .order-info-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .estimated-time {
+                text-align: left;
+            }
+        }
+
+        /* Driver Info */
+        .driver-info {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #eee;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .driver-info.active {
+            display: flex;
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #777;
+        }
+
+        .driver-details {
+            flex: 1;
+        }
+
+        .driver-details h4 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .driver-details p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .driver-rating {
+            font-size: 0.9rem;
+            color: #FFC107;
+        }
+
+        .driver-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--white);
+            color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 159, 28, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 159, 28, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 159, 28, 0);
+            }
+        }
+
+        .step.active .step-icon {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (Simplified) -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="logo">Crave<span>Bites</span>.</a>
+            </div>
+            <div class="nav-right">
+                <a href="index.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+                <a href="index.html#menu" class="nav-item">
+                    <i class="fa-solid fa-utensils"></i> Menu
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="tracking-container">
+        <div class="tracking-header">
+            <h2>Track Your Order</h2>
+            <p>Enter your order ID to see the current status of your delicious meal.</p>
+            <br>
+            <div class="track-input-group">
+                <input type="text" id="orderInput" placeholder="Enter Order ID (e.g. ORD-123456)">
+                <button class="btn btn-primary" id="trackBtn">Track</button>
+            </div>
+        </div>
+
+        <!-- Live Tracking Status -->
+        <div class="order-status-card" id="statusCard">
+            <div class="order-info-header">
+                <div class="order-id">
+                    <h3 id="displayOrderId">ORD-892341</h3>
+                    <p id="orderDate">Placed on Jan 16, 2026</p>
+                </div>
+                <div class="estimated-time">
+                    <span>Estimated Delivery</span>
+                    <strong id="displayTime">30-45 mins</strong>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="steps">
+                    <div class="step" id="step1">
+                        <div class="step-icon"><i class="fa-solid fa-receipt"></i></div>
+                        <p>Order Placed</p>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-icon"><i class="fa-solid fa-fire-burner"></i></div>
+                        <p>Preparing</p>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-icon"><i class="fa-solid fa-motorcycle"></i></div>
+                        <p>Out for Delivery</p>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                        <p>Delivered</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Driver Info Section -->
+            <div class="driver-info" id="driverInfo">
+                <div class="driver-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="driver-details">
+                    <h4>Delivery Partner</h4>
+                    <p id="driverName">Michael S.</p>
+                    <div class="driver-rating">
+                        <i class="fa-solid fa-star"></i> 4.9 • 1,240 Deliveries
+                    </div>
+                </div>
+                <div class="driver-actions">
+                    <button class="btn-icon" title="Call Driver"><i class="fa-solid fa-phone"></i></button>
+                    <button class="btn-icon" title="Message Driver"><i class="fa-solid fa-message"></i></button>
+                </div>
+            </div>
+
+            <div class="order-details">
+                <h4>Order Details</h4>
+                <ul id="orderItemsList" class="order-items-list">
+                    <!-- Items -->
+                </ul>
+                <p class="order-total-label">Total: <span id="orderTotal">$0.00</span></p>
+            </div>
+        </div>
+
+        <!-- Recent Orders List -->
+        <div class="recent-orders">
+            <h3>Your Recent Orders</h3>
+            <div class="order-list" id="recentOrdersList">
+                <!-- Injected via JS -->
+                <p class="no-orders-message">No recent orders found.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auth Check REMOVED
+        /*
+        const user = localStorage.getItem('craveBitesUser');
+        if (!user) {
+            window.location.href = 'index.html';
+        }
+        */
+
+        // DOM Elements
+        const statusCard = document.getElementById('statusCard');
+        const orderInput = document.getElementById('orderInput');
+        const trackBtn = document.getElementById('trackBtn');
+        const recentOrdersList = document.getElementById('recentOrdersList');
+
+        // Tracking Elements
+        const displayOrderId = document.getElementById('displayOrderId');
+        const orderDate = document.getElementById('orderDate');
+        const displayTime = document.getElementById('displayTime');
+        const orderItemsList = document.getElementById('orderItemsList');
+        const orderTotal = document.getElementById('orderTotal');
+        const progressFill = document.getElementById('progressFill');
+        const steps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3'),
+            document.getElementById('step4')
+        ];
+
+        // Get URL Params
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlOrderId = urlParams.get('orderId');
+
+        // Load Orders from LocalStorage
+        const orders = JSON.parse(localStorage.getItem('craveBitesOrders')) || [];
+
+        // Render Recent Orders
+        function renderRecentOrders() {
+            if (orders.length > 0) {
+                recentOrdersList.innerHTML = '';
+                orders.forEach(order => {
+                    const item = document.createElement('div');
+                    item.classList.add('order-item');
+                    item.onclick = () => loadOrder(order.id);
+                    item.innerHTML = `
+                        <div class="order-summary-mini">
+                            <h4>${order.id}</h4>
+                            <p>${new Date(order.date).toLocaleDateString()} • ${order.items.length} items</p>
+                        </div>
+                        <div class="order-status-badge status-preparing">
+                            ${order.status}
+                        </div>
+                    `;
+                    recentOrdersList.appendChild(item);
+                });
+            }
+        }
+
+        renderRecentOrders();
+
+        // Load specific order
+        function loadOrder(id) {
+            const order = orders.find(o => o.id === id);
+
+            if (order) {
+                // Show Card
+                statusCard.classList.add('active');
+
+                // Populate Data
+                displayOrderId.innerText = order.id;
+                orderDate.innerText = 'Placed on ' + new Date(order.date).toLocaleString();
+                displayTime.innerText = order.estimatedTime || '30-45 mins';
+                orderTotal.innerText = order.total;
+
+                // Items
+                orderItemsList.innerHTML = '';
+                order.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerText = `${item.quantity}x ${item.title}`;
+                    orderItemsList.appendChild(li);
+                });
+
+                // Animate Timeline (Simulated Status)
+                // Random status 1 (Preparing) or 2 (Delivery) for demo, unless completed
+                const demoStatus = Math.floor(Math.random() * 2) + 1; // 1 or 2
+                updateTimeline(demoStatus);
+
+                // Update Driver Info
+                const driverInfo = document.getElementById('driverInfo');
+                if (demoStatus >= 2) {
+                    const names = ['Michael S.', 'Sarah J.', 'David R.', 'Jessica T.'];
+                    document.getElementById('driverName').innerText = names[Math.floor(Math.random() * names.length)];
+                    setTimeout(() => driverInfo.classList.add('active'), 600);
+                } else {
+                    driverInfo.classList.remove('active');
+                }
+
+                // Scroll to card
+                statusCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                alert('Order not found!');
+            }
+        }
+
+        function updateTimeline(stepIndex) {
+            // Reset
+            steps.forEach(s => {
+                s.classList.remove('active', 'completed');
+            });
+            progressFill.style.width = '0%';
+
+            // Set Progress (0 to 3)
+            // 0: Placed, 1: Preparing, 2: Delivery, 3: Delivered
+
+            // For Demo: Randomly set status based on ID if we wanted, but let's just make it look cool
+            // Let's say stepIndex is 1 (Preparing) by default
+
+            setTimeout(() => {
+                // Activate steps up to current
+                for (let i = 0; i <= stepIndex; i++) {
+                    steps[i].classList.add('active');
+                    if (i < stepIndex) steps[i].classList.add('completed');
+                }
+
+                // Bar width: 0 = 0%, 1 = 33%, 2 = 66%, 3 = 100%
+                const percentages = ['0%', '33%', '66%', '100%'];
+                progressFill.style.width = percentages[stepIndex];
+            }, 100);
+        }
+
+        // Check URL for Order ID
+        if (urlOrderId) {
+            orderInput.value = urlOrderId;
+            loadOrder(urlOrderId);
+        }
+
+        // Track Button Click
+        trackBtn.addEventListener('click', () => {
+            const id = orderInput.value.trim();
+            if (id) {
+                loadOrder(id);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
