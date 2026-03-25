@@ -265,12 +265,12 @@ body.dark-mode .settings-tab {
 
 body.dark-mode .settings-tab:hover {
     background: rgba(255, 165, 0, 0.15);
-    color: #FFA500;
+    color: #8B2332;
     transform: translateX(4px);
 }
 
 body.dark-mode .settings-tab.active {
-    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #8B2332 0%, #6E1A28 100%);
     color: #fff;
     box-shadow: 0 4px 12px rgba(255, 165, 0, 0.5);
 }
@@ -285,7 +285,7 @@ body.dark-mode .form-group select {
 
 body.dark-mode .form-group input:focus,
 body.dark-mode .form-group select:focus {
-    border-color: #FFA500;
+    border-color: #8B2332;
     box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.2);
     background: rgba(10, 10, 10, 0.95);
     outline: none;
@@ -309,12 +309,12 @@ body.dark-mode .slider {
 }
 
 body.dark-mode input:checked + .slider {
-    background-color: #FFA500;
+    background-color: #8B2332;
     box-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
 }
 
 body.dark-mode input:focus + .slider {
-    box-shadow: 0 0 1px #FFA500;
+    box-shadow: 0 0 1px #8B2332;
 }
 
 body.dark-mode .settings-section h2 {
@@ -324,7 +324,7 @@ body.dark-mode .settings-section h2 {
 }
 
 body.dark-mode .btn-save {
-    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #8B2332 0%, #6E1A28 100%);
     color: #fff;
     box-shadow: 0 4px 16px rgba(255, 165, 0, 0.5);
     transition: all 0.3s ease;
@@ -332,7 +332,7 @@ body.dark-mode .btn-save {
 }
 
 body.dark-mode .btn-save:hover {
-    background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+    background: linear-gradient(135deg, #6E1A28 0%, #8B2332 100%);
     box-shadow: 0 6px 20px rgba(255, 165, 0, 0.7);
     transform: translateY(-2px);
 }

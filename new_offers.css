@@ -1,7 +1,7 @@
 /* Special Offers Redesign */
 .special-offers {
     padding: 100px 0;
-    background: linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%);
+    background: var(--white);
     position: relative;
     overflow: hidden;
 }
@@ -13,7 +13,7 @@
     right: -50px;
     width: 300px;
     height: 300px;
-    background: rgba(255, 159, 28, 0.1);
+    background: rgba(139, 35, 50, 0.05);
     border-radius: 50%;
     filter: blur(50px);
 }
@@ -32,14 +32,14 @@
 
 /* Main Offer Card */
 .offer-main {
-    background: linear-gradient(135deg, #FF9F1C, #FF7E5F);
+    background: linear-gradient(135deg, #8B2332, #6E1A28);
     border-radius: 25px;
     padding: 50px;
     position: relative;
     display: flex;
     align-items: center;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(255, 159, 28, 0.25);
+    box-shadow: 0 15px 40px rgba(139, 35, 50, 0.25);
     color: white;
     min-height: 400px;
 }
@@ -116,7 +116,7 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    color: #FF9F1C;
+    color: #8B2332;
     padding: 8px 16px;
     border-radius: 50px;
     font-weight: 700;
@@ -169,12 +169,12 @@
 }
 
 .offer-side.design-burger {
-    background: linear-gradient(135deg, #2EC4B6, #209CDE);
+    background: linear-gradient(135deg, #C8A04A, #B8903A);
     color: white;
 }
 
 .offer-side.design-fries {
-    background: linear-gradient(135deg, #FF3366, #F06);
+    background: linear-gradient(135deg, #A83445, #8B2332);
     color: white;
 }
 
@@ -248,7 +248,7 @@ body.dark-mode .special-offers {
 }
 
 body.dark-mode .special-offers::before {
-    background: rgba(255, 140, 0, 0.08);
+    background: rgba(139, 35, 50, 0.08);
 }
 
 /* Responsive */
